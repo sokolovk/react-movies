@@ -7,7 +7,31 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+html {
+  font-size: 18px;
+}
+
+nav {
+  padding: 0 2rem;
+}
+
+main {
+  min-height: calc(100vh - 134px);
+  padding: 2.5rem 0;
+}
+
+.films {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.input-field input[type=search] {
+  font-size: 1.2rem;
+}
+
+.search-btn {
+  position: absolute;
+  top: 0;
+  right: .25rem;
 }
