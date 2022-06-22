@@ -1,17 +1,16 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {Films} from "../components/Films";
-import {Preloader} from "../components/  Preloader";
+import {Preloader} from "../components/Preloader";
 import {Search} from "../components/Search";
 
 const API_KEY = process.env.REACT_APP_API_KEY;
 
-class Main extends React.Component {
-    state = {
-        films: [],
-        loading: true,
-    }
+function Main() {
+    const [films, setFilms] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    updateSearch = (str, radio) => {
+    const updateSearch = (str, radio) => {
+        setLoading(true);
         let typeSearch = (radio === 'movie') ? '&type=movie'
             :  (radio === 'series')
                 ? '&type=series' : '';
@@ -19,27 +18,37 @@ class Main extends React.Component {
         if(str.length) {
             fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&s=${str}${typeSearch}`)
                 .then(response => response.json())
-                .then(data => this.setState({films: data.Search, loading: false}))
+                .then(data => {
+                    setFilms(data.Search);
+                    setLoading(false);
+                })
+                .catch((err) => {
+                    console.log(err);
+                    setLoading(false);
+                })
         }
     }
 
-    componentDidMount() {
+    useEffect(() => {
         fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&s=matrix`)
             .then(response => response.json())
-            .then(data => this.setState({films: data.Search, loading: false}))
-    }
+            .then(data => {
+                setFilms(data.Search);
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.log(err);
+                setLoading(false);
+            })
 
-    render() {
-        const {films, loading} = this.state;
+    }, [])
 
-        return <main className="container content">
-            <Search updateSearch={this.updateSearch} />
-            {
-                loading ? ( <Preloader />) : <Films films={films} />
-            }
-
-        </main>
-    }
+    return <main className="container content">
+        <Search updateSearch={updateSearch} />
+        {
+            loading ? ( <Preloader />) : <Films films={films} />
+        }
+    </main>
 }
 
 export {Main}
